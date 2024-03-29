@@ -1,0 +1,28 @@
+name: lambda-python
+
+on:
+  push:
+    paths:
+      - lambda-python/Dockerfile
+      - .github/workflows/lambda-python.yaml
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+        matrix:
+            python_version: [3.12, 3.13]
+    uses: isaacasancheza/workflows/.github/workflows/buildx-and-push.yaml@master
+    with:
+        tag: ${{ matrix.python_version }}
+        name: isaacasancheza/lambda-python
+        context: lambda-python
+        platforms: linux/arm64
+        build-args: |
+          APP_DIR=/app
+          BASE_IMAGE=ghcr.io/astral-sh/uv:python${{ matrix.python_version }}-bookworm-slim

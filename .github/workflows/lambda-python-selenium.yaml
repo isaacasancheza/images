@@ -1,0 +1,33 @@
+name: lambda-python-selenium
+
+on:
+  push:
+    paths:
+      - lambda-python-selenium/Dockerfile
+      - .github/workflows/lambda-python-selenium.yaml
+    branches:
+      - master
+  workflow_run:
+    types:
+      - completed
+    workflows:
+      - lambda-python
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  build-and-push:
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+        matrix:
+            python_version: [3.12, 3.13]
+    uses: isaacasancheza/workflows/.github/workflows/buildx-and-push.yaml@master
+    with:
+        tag: ${{ matrix.python_version }}
+        name: isaacasancheza/lambda-python-selenium
+        context: lambda-python-selenium
+        platforms: linux/arm64
+        build-args: |
+          BASE_IMAGE=ghcr.io/isaacasancheza/lambda-python:${{ matrix.python_version }}

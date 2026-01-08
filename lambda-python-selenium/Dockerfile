@@ -6,7 +6,7 @@ RUN apt-get update  \
     && export DEBIAN_FRONTEND=noninteractive \
     #
     # install selenium deps
-    && apt-get install -y --no-install-recommends chromium-driver chromium-headless-shell \
+    && apt-get install -y --no-install-recommends xvfb chromium-driver chromium-headless-shell \
     #
     # clean-up
     && apt-get autoremove -y  \
